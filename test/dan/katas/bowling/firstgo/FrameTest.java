@@ -8,10 +8,7 @@ import static org.junit.Assert.*;
  * For info - I had this complete before starting the BowlingGame.
  */
 public class FrameTest {
-    
-    public FrameTest() {
-    }
-    
+      
     // Test a simple scoring frame's score
     @Test
     public void test_frameScoreSimple() {
@@ -68,7 +65,7 @@ public class FrameTest {
 	f2 = f1.roll('X');
 	f2.roll('5');
 	f2.roll('4');
-	assertEquals(19, f1.getScore());    
+	assertEquals("Strike should use next two rolls", 19, f1.getScore());    
     }
     
     @Test
@@ -78,7 +75,7 @@ public class FrameTest {
 	f2 = f1.roll('X');
 	f2.roll('5');
 	f2.roll('/');
-	assertEquals(20, f1.getScore());    
+	assertEquals("Strike should use next two rolls, including counting spare as 10", 20, f1.getScore());    
     }
     
     @Test
@@ -88,6 +85,6 @@ public class FrameTest {
 	f2 = f1.roll('X');
 	f3 = f2.roll('X');
 	f3.roll('X');
-	assertEquals(30, f1.getScore());    
+	assertEquals("Strike should use next two rolls, even if both are strikes - two frames", 30, f1.getScore());    
     }
 }

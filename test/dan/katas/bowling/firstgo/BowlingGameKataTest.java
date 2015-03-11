@@ -9,9 +9,6 @@ import static org.junit.Assert.*;
  */
 public class BowlingGameKataTest {
     
-    public BowlingGameKataTest() {
-    }
-    
     @Test
     public void test_simpleScores60() {
 	String testSeq = "12345123451234512345";

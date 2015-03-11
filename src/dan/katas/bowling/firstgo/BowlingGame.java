@@ -26,7 +26,7 @@ public class BowlingGame {
 	System.out.println("score = " + bg.getScore(args[0]));
     }
 
-    private Frame[] frames;
+    private final Frame[] frames;
     private int frameIdx;
 
     /**

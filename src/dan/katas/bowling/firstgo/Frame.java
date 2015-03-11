@@ -21,7 +21,7 @@ package dan.katas.bowling.firstgo;
 
 public class Frame {
 
-    private int[] scores;
+    private final int[] scores;
     private int rollIdx;
     private Frame nextFrame;
     
@@ -56,6 +56,10 @@ public class Frame {
 		
 	    case 'X':
 		scores[rollIdx] = 10;
+		break;
+		
+	    default:
+		// Kata spec says we can expect correctly formatted input
 		break;
 		
 	}
