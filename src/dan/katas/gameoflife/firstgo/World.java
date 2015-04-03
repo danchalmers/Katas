@@ -34,6 +34,12 @@ public class World implements WorldLookup {
 	newEdgeCells = new HashSet<>();
     }
 
+    /**
+     * Get the cell at the given coordinates, creating a dead cell if one doesn't exist
+     * @param x
+     * @param y
+     * @return the new cell
+     */
     @Override
     public Cell getCellAt(int x, int y) {
 	String key = Cell.getCoordKey(x, y);
@@ -45,17 +51,22 @@ public class World implements WorldLookup {
 	  I don't check the hash though, as the overhead of testing is likely to outweigh the benefit of fewer create / put steps
 	*/
 	if (cell == null) {
-	    cell = new Cell(x, y, Cell.CellState.DEAD);
+	    cell = Cell.makeDeadCell(x, y);
 	    newEdgeCells.add(cell);
 	}
 	return cell;
     }
 
-    void addCell(Cell c) {
+    /**
+     * Adding a cell to the world. Used for setting up initial state.
+     * @param The cell to add, which describes its own coordinates
+     */
+    public void addCell(Cell c) {
 	worldCells.put(c.getCoordKey(), c);
 	updateBounds(c);
     }
 
+    // Update bounding box to simplify printing
     private void updateBounds(Cell c) {
 	int cx, cy;
 	
@@ -67,6 +78,11 @@ public class World implements WorldLookup {
 	maxY = Math.max(maxY, cy);
     }
 
+    /**
+     * Create a new World by running the life / death rules against each Cell
+     * Having a new world avoids updates breaking later cell reading
+     * @return the new state of the world
+     */
     public World tick() {
 	World nextTickWorld;
 
@@ -76,6 +92,7 @@ public class World implements WorldLookup {
 	return nextTickWorld;
     }
 
+    // The main run through of building the new world version
     private void tickCells(World nextTickWorld) {
 	for (Cell cell : worldCells.values()) {
 	    nextTickWorld.addCell(cell.getNext(this));
@@ -126,6 +143,10 @@ public class World implements WorldLookup {
 	return maxY;
     }
 
+    /**
+     * ASCII art version
+     * @return 
+     */
     public String[] render() {
 	String[] strings = new String[1 + maxY - minY];
 	for (int y = minY; y <= maxY; y++) {
@@ -141,6 +162,17 @@ public class World implements WorldLookup {
     // to support testing checks that it doesn't grow unnecessarily
     int getSize() {
 	return worldCells.size();
+    }
+
+    /**
+     * System.out.println output of the render
+     */
+    public void print() {
+	String[] data = render();
+	for (String s : data) {
+	    System.out.println(s);
+	}
+	System.out.println();
     }
 
 }
