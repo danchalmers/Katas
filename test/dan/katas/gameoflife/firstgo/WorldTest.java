@@ -13,16 +13,15 @@ public class WorldTest {
     @Test
     public void test_retreiveFreshCell() {
 	World w = new World();
-	Cell c = new Cell(0,0,Cell.CellState.DEAD);
 	assertNotNull("World should make a cell if none exists", w.getCellAt(0,0));
     }
     
     @Test
     public void test_retreiveAddedCell() {
 	World w = new World();
-	Cell c1 = new Cell(0,0,Cell.CellState.DEAD);
+	Cell c1 = Cell.makeDeadCell(0,0);
 	w.addCell(c1);
-	Cell c2 = new Cell(5,5,Cell.CellState.ALIVE);
+	Cell c2 = Cell.makeAliveCell(5,5);
 	w.addCell(c2);
 	assertEquals("World should return a correctly", c1, w.getCellAt(0,0));
 	assertEquals("World should return a correctly", c2, w.getCellAt(5,5));
@@ -33,12 +32,12 @@ public class WorldTest {
 	World w = new World();
 	for (int x=0; x<3; x++) {
 	    for (int y=0; y<3; y++) {
-		w.addCell(new Cell(x,y,Cell.CellState.DEAD));
+		w.addCell(Cell.makeDeadCell(x,y));
 	    }
 	}
-	w.addCell(new Cell(0,0,Cell.CellState.ALIVE));
-	w.addCell(new Cell(1,2,Cell.CellState.ALIVE));
-	w.addCell(new Cell(2,1,Cell.CellState.ALIVE));
+	w.addCell(Cell.makeAliveCell(0,0));
+	w.addCell(Cell.makeAliveCell(1,2));
+	w.addCell(Cell.makeAliveCell(2,1));
 	World result = w.tick();
 	assertTrue("this tick should change a cell to become alive", result.getCellAt(1, 1).isAlive());
 	assertEquals("no need to make the cell space bigger this tick", result.getSize(), w.getSize());
@@ -47,9 +46,9 @@ public class WorldTest {
     @Test
     public void test_tickMakesNewEdgeCell() {
 	World w = new World();
-	w.addCell(new Cell(0,0,Cell.CellState.ALIVE));
-	w.addCell(new Cell(1,0,Cell.CellState.ALIVE));
-	w.addCell(new Cell(2,0,Cell.CellState.ALIVE));
+	w.addCell(Cell.makeAliveCell(0,0));
+	w.addCell(Cell.makeAliveCell(1,0));
+	w.addCell(Cell.makeAliveCell(2,0));
 	World result = w.tick();
 	assertTrue("tick should create a new cell above, where there wasn't one before", result.getCellAt(1, 1).isAlive());
 	assertTrue("tick should create a new cell below, where there wasn't one before", result.getCellAt(1, -1).isAlive());
@@ -59,15 +58,15 @@ public class WorldTest {
     @Test
     public void test_updateBounds() {
 	World w = new World();
-	w.addCell(new Cell(1,1));
-	w.addCell(new Cell(-1,-1));
-	assertEquals(-1, w.getMinX());
-	assertEquals(-1, w.getMinY());
-	assertEquals(1, w.getMaxX());
-	assertEquals(1, w.getMaxY());
-	w.addCell(new Cell(5,6));
-	assertEquals(5, w.getMaxX());
-	assertEquals(6, w.getMaxY());
+	w.addCell(Cell.makeAliveCell(1,1));
+	w.addCell(Cell.makeAliveCell(-1,-1));
+	assertEquals("X Bounds should be expanded", -1, w.getMinX());
+	assertEquals("Y Bounds should be expanded", -1, w.getMinY());
+	assertEquals("X Bounds should be expanded", 1, w.getMaxX());
+	assertEquals("Y Bounds should be expanded", 1, w.getMaxY());
+	w.addCell(Cell.makeAliveCell(5,6));
+	assertEquals("X Bounds should be expanded further", 5, w.getMaxX());
+	assertEquals("Y Bounds should be expanded further", 6, w.getMaxY());
     }
     
     @Test
@@ -75,45 +74,25 @@ public class WorldTest {
 	World w = new World();
 	World newWorld;
 	String[] result;
-	w.addCell(new Cell(0,0,Cell.CellState.ALIVE));
-	w.addCell(new Cell(1,0,Cell.CellState.ALIVE));
-	w.addCell(new Cell(2,0,Cell.CellState.ALIVE));
+	w.addCell(Cell.makeAliveCell(0,0));
+	w.addCell(Cell.makeAliveCell(1,0));
+	w.addCell(Cell.makeAliveCell(2,0));
 	result = w.render();
-	print(result);
-
+	w.print();
 	
 	newWorld = w.tick();
 	result = newWorld.render();
 	assertEquals("three rows in new world", 3, result.length);
 	assertEquals("three cells in middle row", 3, result[1].length());
-	print(result);
-
+	newWorld.print();
 	
 	newWorld = newWorld.tick();
 	result = newWorld.render();
 	assertEquals("three rows in new world", 3, result.length);
 	assertEquals("three cells in middle row", 3, result[1].length());
-	print(result);
+	newWorld.print();
 	
-	newWorld = newWorld.tick();
-	result = newWorld.render();
-	assertEquals("three rows in new world", 3, result.length);
-	assertEquals("three cells in middle row", 3, result[1].length());
-	print(result);
-	
-	newWorld = newWorld.tick();
-	result = newWorld.render();
-	assertEquals("three rows in new world", 3, result.length);
-	assertEquals("three cells in middle row", 3, result[1].length());
-	print(result);
     }
     
-    	// test by inspection
-    private void print(String[] result) {
-	for (String s : result) {
-	    System.out.println(s);
-	}
-	System.out.println();
-    }
 
 }

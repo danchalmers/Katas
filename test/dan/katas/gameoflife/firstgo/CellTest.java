@@ -12,14 +12,14 @@ public class CellTest {
 
     @Test
     public void test_getCoordKey() {
-	Cell c = new Cell(-1, 3);
+	Cell c = Cell.makeDeadCell(-1, 3);
 	String expected = "-1,3";
 	assertEquals("coord key broken, not -1,3", expected, c.getCoordKey());
     }
 
     @Test
     public void test_eightLookups() {
-	Cell c = new Cell(0, 0, Cell.CellState.ALIVE);
+	Cell c = Cell.makeAliveCell(0, 0);
 	NAdjacentAliveMock world = new NAdjacentAliveMock(2);
 	c.getNext(world);
 	assertEquals("Lookup should make 8 different tests", 8, world.testedCells.size());
@@ -27,7 +27,7 @@ public class CellTest {
 
     @Test
     public void test_dies() {
-	Cell c = new Cell(0, 0, Cell.CellState.ALIVE);
+	Cell c = Cell.makeAliveCell(0, 0);
 	WorldLookup world = new NAdjacentAliveMock(0);
 	Cell result = c.getNext(world);
 	assertFalse("Should die", result.isAlive());
@@ -35,7 +35,7 @@ public class CellTest {
 
     @Test
     public void test_staysDead() {
-	Cell c = new Cell(0, 0, Cell.CellState.DEAD);
+	Cell c = Cell.makeDeadCell(0, 0);
 	WorldLookup world = new NAdjacentAliveMock(0);
 	Cell result = c.getNext(world);
 	assertFalse("Should stay dead", result.isAlive());
@@ -43,7 +43,7 @@ public class CellTest {
 
     @Test
     public void test_staysAlive2() {
-	Cell c = new Cell(0, 0, Cell.CellState.ALIVE);
+	Cell c = Cell.makeAliveCell(0, 0);
 	WorldLookup world = new NAdjacentAliveMock(2);
 	Cell result = c.getNext(world);
 	assertTrue("Should stay alive", result.isAlive());
@@ -51,7 +51,7 @@ public class CellTest {
 
     @Test
     public void test_staysAlive3() {
-	Cell c = new Cell(0, 0, Cell.CellState.ALIVE);
+	Cell c = Cell.makeAliveCell(0, 0);
 	WorldLookup world = new NAdjacentAliveMock(3);
 	Cell result = c.getNext(world);
 	assertTrue("Should stay alive", result.isAlive());
@@ -59,7 +59,7 @@ public class CellTest {
 
     @Test
     public void test_comesAlive3() {
-	Cell c = new Cell(0, 0, Cell.CellState.DEAD);
+	Cell c = Cell.makeDeadCell(0, 0);
 	WorldLookup world = new NAdjacentAliveMock(3);
 	Cell result = c.getNext(world);
 	assertTrue("Should come to life", result.isAlive());
@@ -67,7 +67,7 @@ public class CellTest {
 
     @Test
     public void test_dies4() {
-	Cell c = new Cell(0, 0, Cell.CellState.ALIVE);
+	Cell c = Cell.makeAliveCell(0, 0);
 	WorldLookup world = new NAdjacentAliveMock(4);
 	Cell result = c.getNext(world);
 	assertFalse("Should stay alive", result.isAlive());
@@ -95,9 +95,9 @@ public class CellTest {
 	    checkCoords(x,y);
 	    if (reportedAlive < requiredAlive) {
 		reportedAlive++;
-		c = new Cell(x, y, Cell.CellState.ALIVE);
+		c = Cell.makeAliveCell(x, y);
 	    } else {
-		c = new Cell(x, y, Cell.CellState.DEAD);
+		c = Cell.makeDeadCell(x, y);
 	    }
 	    testedCells.add(c.getCoordKey());
 	    return c;
